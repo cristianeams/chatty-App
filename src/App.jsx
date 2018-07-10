@@ -3,32 +3,42 @@ import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
 import NavBar from './NavBar.jsx';
 
-const data = {
-  currentUser: {name: 'Bob'}, // optional. if currentUser is not defined, it means the user is Anonymous
-    messages: [
-      {
-        username: 'Bob',
-        id: 1,
-        content: 'Has anyone seen my marbles?',
-      },
-      {
-        username: 'Anonymous',
-        id: 2,
-        content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
-      }
-    ]
-}
 
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = data;
+    this.state =  {
+      currentUser: {name: 'Bob'}, // optional. if currentUser is not defined, it means the user is Anonymous
+        messages: [
+          {
+            username: 'Bob',
+            id: 1,
+            content: 'Has anyone seen my marbles?',
+          },
+          {
+            username: 'Anonymous',
+            id: 2,
+            content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
+          }
+        ]
+    }
+    this.addMessage = this.addMessage.bind(this);
+  }
+
+  addMessage(message) {
+    {/* Adds a new message to messages array and 
+    updates the state of the app component.*/}
+
+    const oldMessages = this.state.messages;
+    const newMessages = [...oldMessages, message];
+    this.setState({ 
+      messages: newMessages });
   }
     // in App.jsx
   componentDidMount() {
-    console.log('componentDidMount <App />');
+    //console.log('componentDidMount <App />');
     setTimeout(() => {
-      console.log('Simulating incoming message');
+      
       // Add a new message to the list of messages in the data store
       const newMessage = {id: 3, username: 'Michelle', content: 'Hello there!'};
       const messages = this.state.messages.concat(newMessage)
@@ -43,7 +53,7 @@ class App extends Component {
       <div>
         <NavBar />
         <MessageList messages={this.state.messages} />
-        <ChatBar currentUser={ this.state.currentUser } />
+        <ChatBar currentUser={ this.state.currentUser.name } addMessage={this.addMessage} />
       </div>  
     );
   }
