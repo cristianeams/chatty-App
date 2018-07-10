@@ -5,9 +5,9 @@ export default function MessageList() {
   return (
     <main className="messages">
       <Message />
-      <div className="message system">
+      {/* <div className="message system">
         Anonymous1 changed their name to nomnom.
-      </div>
+      </div> */}
     </main>
   );
 }
