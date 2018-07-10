@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,700");
     @import url("https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css");
+      @import url("https://use.fontawesome.com/releases/v5.1.0/css/all.css");
 
     body {
       background: white;
@@ -10,8 +11,8 @@
     }
 
     .chatbar {
-      background: tomato;
-      border-top: 1px solid black;
+      background: #614cdb;
+      border-top: 1px solid #23167a;
       bottom: 0;
       display: flex;
       left: 0;
@@ -22,7 +23,8 @@
 
     .chatbar-message,
     .chatbar-username {
-      border: 1px solid black;
+      border: 1px solid #23167a;
+      border-radius: 4px;
       display: block;
       height: 40px;
       line-height: 40px;
@@ -65,24 +67,28 @@
     }
 
     .navbar {
-      background: tomato;
-      border-bottom: 1px solid black;
+      background: #614cdb;
+      border-bottom: 1px solid #23167a;
       height: 60px;
       left: 0;
       padding: 0 10px;
       position: fixed;
       right: 0;
       top: 0;
+      display: flex;
+      align-items: baseline;
     }
 
-    .navbar-brand {
-      color: inherit;
-      display: block;
-      float: left;
+    .navbar-brand, i {
+      color: hsla(0,0%,100%,.5);
       font-weight: 700;
       font-size: 28px;
       height: 60px;
       line-height: 60px;
       padding: 0 10px;
       text-decoration: none;
+      transition: color 0.5s ease-in-out;
+      &:hover {
+        color: #fff;
+      }
     }

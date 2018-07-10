@@ -5,6 +5,10 @@ export default function MessageList() {
   return (
     <main className="messages">
       <Message />
+      <Message />
+      <Message />
+      <Message />
+      <Message />
       {/* <div className="message system">
         Anonymous1 changed their name to nomnom.
       </div> */}
