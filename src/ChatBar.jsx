@@ -2,16 +2,13 @@ import React, {Component} from 'react';
 
 class ChatBar extends Component {
   constructor(props) {
-    super();
-
-    this.state = {
-      username: props.currentUser.name, 
-    }
+    super(props);
   }
   render() {
+    const {currentUser} = this.props;
     return (
       <footer className="chatbar">
-        <input className="chatbar-username" value= { this.state.username} />
+        <input className="chatbar-username" value= { currentUser} />
         <input className="chatbar-message" placeholder="Type a message and hit ENTER" />
     </footer>
     );
