@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 export default function Message(props) {
@@ -9,3 +8,4 @@ export default function Message(props) {
     </div>
   );
 }
+
