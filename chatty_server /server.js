@@ -1,5 +1,7 @@
 const express = require('express');
 const SocketServer = require('ws').Server;
+// Generates a unique message Id
+const uuidv4 = require('uuid/v4');
 
 // Set the port to 3001
 const PORT = 3001;
@@ -20,7 +22,8 @@ wss.on('connection', (ws) => {
   console.log('Client connected');
   ws.on('message', (message) => {
     const parsedMessage = JSON.parse(message);
-    console.log(`User ${parsedMessage.message.username} said ${parsedMessage.message.content}`);
+    parsedMessage.message['id'] = uuidv4();
+    console.log(`UserId: ${parsedMessage.message.id} -  User ${parsedMessage.message.username} said ${parsedMessage.message.content}`);
   }) 
 
 
