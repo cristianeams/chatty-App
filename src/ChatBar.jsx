@@ -5,14 +5,27 @@ class ChatBar extends Component {
 
   render() {
     const { currentUser} = this.props;
+  
     const addMessage = event => {
+      let content = event.target.value;
+      const state = {
+        error: ''
+      };
+  
       if (event.key === 'Enter') {
-        const newMessage = {
-          username: currentUser,
-          id: generateID(),
-          content: event.target.value
-        };
-        this.props.addMessage(newMessage);
+        if(!content) {
+          state.error = 'You cannot post an empty message.';
+        } else {
+          const newMessage = {
+            username: currentUser,
+            id: generateID(),
+            content: content,
+            
+          };
+          state.content = '';
+          this.props.addMessage(newMessage);
+        }
+      
       }
     
     }

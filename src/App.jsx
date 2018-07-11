@@ -15,11 +15,13 @@ class App extends Component {
             username: 'Bob',
             id: generateID(),
             content: 'Has anyone seen my marbles?',
+            error: ''
           },
           {
             username: 'Anonymous',
             id: generateID(),
-            content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
+            content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.',
+            error: ''
           }
         ]
     }
