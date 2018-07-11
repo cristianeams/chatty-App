@@ -1,39 +1,38 @@
 import React, {Component} from 'react';
 import { generateID } from './main.js';
 
+
 class ChatBar extends Component {
+  constructor (props) {
+    super()
+    this.state = {username: props.currentUser.name, content: ''}
+    this.handleMessage = this.handleMessage.bind(this);
+    this.handleMessageChange = this.handleMessageChange.bind(this);
+    
+  }
+  handleMessageChange = e => {
+    const { currentUser} = this.props;
+    this.setState({username: currentUser,
+      content: e.target.value});
+  }
+  
+  handleMessage = event => {
+    const { currentUser} = this.props;
+    if (event.key === 'Enter') {
+      this.props.onPost(this.state);
+      this.setState({
+        username: currentUser, 
+        content: ''
+      })
+    }
+  }
 
   render() {
     const { currentUser} = this.props;
-  
-    const addMessage = event => {
-      let content = event.target.value;
-      const state = {
-        error: ''
-      };
-  
-      if (event.key === 'Enter') {
-        if(!content) {
-          state.error = 'You cannot post an empty message.';
-        } else {
-          const newMessage = {
-            username: currentUser,
-            id: generateID(),
-            content: content,
-            
-          };
-          state.content = '';
-          this.props.addMessage(newMessage);
-        }
-      
-      }
-    
-    }
     return (
       <footer className="chatbar">
         <input className="chatbar-username" defaultValue= {currentUser} />
-        {/* addMessage triggers the render method..*/}
-        <input className="chatbar-message" placeholder="Type a message and hit ENTER" onKeyPress={ addMessage }/>
+        <input className="chatbar-message" placeholder="Type a message and hit ENTER" value = {this.state.content} onChange = {this.handleMessageChange} onKeyPress={ this.handleMessage }/>
       </footer>
     );
   }

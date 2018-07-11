@@ -25,21 +25,26 @@ class App extends Component {
           }
         ]
     }
-    this.addMessage = this.addMessage.bind(this);
+  
     this.componentDidMount = this.componentDidMount.bind(this);
+    this.sendToServer = this.sendToServer.bind(this);
     this.socket = new WebSocket("ws://localhost:3001");
+    this.onPost = this.onPost.bind(this);
+  }
+
+  sendToServer = message => {
+    this.socket.send(JSON.stringify(message));
+    console.log("Message sent to server");
+  }
+
+  onPost = message => {
+    const newMessage = {
+      username: message.username,
+      content: message.content
+    }
+    this.sendToServer({message: newMessage});
   }
   
-  addMessage(message) {
-    {/* Adds a new message to messages array and 
-    updates the state of the app component.*/}
-
-    const oldMessages = this.state.messages;
-    const newMessages = [...oldMessages, message];
-    this.setState({ 
-      messages: newMessages });
-  }
-    // in App.jsx
   componentDidMount() {
     console.log('componentDidMount <App />');
     // setTimeout(() => {
@@ -53,7 +58,7 @@ class App extends Component {
     // }, 3000);
     this.socket.onopen = (event) => {
       console.log('Connected to server');
-    }
+    }  
   }
 
   render() {
@@ -61,7 +66,7 @@ class App extends Component {
       <div>
         <NavBar />
         <MessageList messages={this.state.messages} />
-        <ChatBar currentUser={ this.state.currentUser.name } addMessage={this.addMessage} />
+        <ChatBar currentUser={ this.state.currentUser.name } onPost={ this.onPost } />
       </div>  
     );
   }
