@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
 import NavBar from './NavBar.jsx';
+import { generateID } from './main.js';
 
 
 class App extends Component {
@@ -12,19 +13,19 @@ class App extends Component {
         messages: [
           {
             username: 'Bob',
-            id: 1,
+            id: generateID(),
             content: 'Has anyone seen my marbles?',
           },
           {
             username: 'Anonymous',
-            id: 2,
+            id: generateID(),
             content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.'
           }
         ]
     }
     this.addMessage = this.addMessage.bind(this);
   }
-
+  
   addMessage(message) {
     {/* Adds a new message to messages array and 
     updates the state of the app component.*/}
