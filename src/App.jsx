@@ -10,22 +10,8 @@ class App extends Component {
     super(props);
     this.state =  {
       currentUser: {name: 'Bob'}, // optional. if currentUser is not defined, it means the user is Anonymous
-        messages: [
-          {
-            username: 'Bob',
-            id: generateID(),
-            content: 'Has anyone seen my marbles?',
-            error: ''
-          },
-          {
-            username: 'Anonymous',
-            id: generateID(),
-            content: 'No, I think you lost them. You lost your marbles Bob. You lost them for good.',
-            error: ''
-          }
-        ]
+      messages: [] // messages coming from the server will be stored here as they arrive
     }
-  
     this.componentDidMount = this.componentDidMount.bind(this);
     this.sendToServer = this.sendToServer.bind(this);
     this.socket = new WebSocket("ws://localhost:3001");
@@ -47,18 +33,20 @@ class App extends Component {
   
   componentDidMount() {
     console.log('componentDidMount <App />');
-    // setTimeout(() => {
-      
-    //   // Add a new message to the list of messages in the data store
-    //   const newMessage = {id: 3, username: 'Michelle', content: 'Hello there!'};
-    //   const messages = this.state.messages.concat(newMessage)
-    //   // Update the state of the app component.
-    //   // Calling setState will trigger a call to render() in App and all child components.
-    //   this.setState({messages: messages})
-    // }, 3000);
     this.socket.onopen = (event) => {
       console.log('Connected to server');
     }  
+    this.socket.onmessage = (event) => {
+      let incomingData = JSON.parse(event.data).message;
+      console.log(incomingData);
+      const messages = this.state.messages;
+      const newMessages = [...messages, incomingData];
+      console.log(newMessages);
+      this.setState({
+        messages: newMessages
+      });
+     
+    }
   }
 
   render() {

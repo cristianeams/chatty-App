@@ -1,5 +1,5 @@
 const express = require('express');
-const SocketServer = require('ws').Server;
+const SocketServer = require('ws');
 // Generates a unique message Id
 const uuidv4 = require('uuid/v4');
 
@@ -13,7 +13,7 @@ const server = express()
   .listen(PORT, '0.0.0.0', 'localhost', () => console.log(`Listening on ${ PORT }`));
 
 // Create the WebSockets server
-const wss = new SocketServer({ server });
+const wss = new SocketServer.Server({ server });
 
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
@@ -21,9 +21,19 @@ const wss = new SocketServer({ server });
 wss.on('connection', (ws) => {
   console.log('Client connected');
   ws.on('message', (message) => {
-    const parsedMessage = JSON.parse(message);
-    parsedMessage.message['id'] = uuidv4();
-    console.log(`UserId: ${parsedMessage.message.id} -  User ${parsedMessage.message.username} said ${parsedMessage.message.content}`);
+    // Broadcast to everyone
+    wss.clients.forEach (client => {
+      if(client.readyState === SocketServer.OPEN) {
+        const parsedMessage = JSON.parse(message);
+        console.log(parsedMessage);
+        parsedMessage.message['id'] = uuidv4();
+        console.log(parsedMessage);
+        client.send(JSON.stringify(parsedMessage));
+      }
+
+    });
+   
+    // console.log(`UserId: ${parsedMessage.message.id} -  User ${parsedMessage.message.username} said ${parsedMessage.message.content}`);
   }) 
 
 
