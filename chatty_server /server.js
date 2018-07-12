@@ -18,26 +18,43 @@ const wss = new SocketServer.Server({ server });
 // Set up a callback that will run when a client connects to the server
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
+
+
+broadcast = message => {
+  wss.clients.forEach (client => {
+    if(client.readyState === SocketServer.OPEN) {
+      client.send(JSON.stringify(message));
+    }
+  });
+};
+
+
 wss.on('connection', (ws) => {
   console.log('Client connected');
+
   ws.on('message', (message) => {
     // Broadcast to everyone
-    wss.clients.forEach (client => {
-      if(client.readyState === SocketServer.OPEN) {
-        const parsedMessage = JSON.parse(message);
-        console.log(parsedMessage);
+    const parsedMessage = JSON.parse(message);
+    switch(parsedMessage.message.type) {
+      case 'postNotification':
+        parsedMessage.message.type = 'incomingNotification';
         parsedMessage.message['id'] = uuidv4();
-        console.log(parsedMessage);
-        client.send(JSON.stringify(parsedMessage));
-      }
+        broadcast(parsedMessage);
+      break;
 
-    });
-   
-    // console.log(`UserId: ${parsedMessage.message.id} -  User ${parsedMessage.message.username} said ${parsedMessage.message.content}`);
-  }) 
-
-
+      case 'postMessage':
+        parsedMessage.message.type = 'incomingMessage';
+        parsedMessage.message['id'] = uuidv4();
+        broadcast(parsedMessage);
+      break;
+      // show an error in the console if the message type is unknown
+      default:
+        throw new Error(`Unknown event type: ${ parsedMessage.message.type }`);
+    }
+  });
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
-  ws.on('close', () => console.log('Client disconnected'));
+  ws.on('close', () => {
+    console.log('Client disconnected')
+  });
 });

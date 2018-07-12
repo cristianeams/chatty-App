@@ -21,26 +21,42 @@ class App extends Component {
   }
 
   sendToServer = message => {
+    // console.log(message)
     this.socket.send(JSON.stringify(message));
     console.log("Message sent to server");
   }
 
   onUser = username => {
-    const myUser = {name: username}
+    // console.log(username);
+    const myUser = { name: username }
     this.setState({
       currentUser : myUser
     });
+
+    if(this.state.currentUser.name != username) {
+      const newNotification = {
+        type: 'postNotification',
+        content: `${ this.state.currentUser.name } has changed their name to ${ username }`
+      }
+      this.sendToServer({
+        message: newNotification
+      });
   }
+}
 
   onPost = message => {
-    const newMessage = {
-      username: this.state.currentUser.name,
-      content: message
-    }
-    this.sendToServer({
-      message: newMessage
-    });
-  }
+    // Sends notification to server
+    console.log(message )
+      // Sends message to server
+      const newMessage = {
+        type: 'postMessage',
+        username: message.username,
+        content: message
+      }
+      this.sendToServer({
+        message: newMessage
+      });
+    }  
   
   componentDidMount() {
     console.log('componentDidMount <App />');
@@ -51,8 +67,20 @@ class App extends Component {
       let incomingData = JSON.parse(event.data).message;
       //console.log(incomingData);
       const messages = this.state.messages;
-      const newMessages = [...messages, incomingData];
-      console.log(newMessages);
+      let newMessages;
+      console.log(incomingData);
+      switch(incomingData.type) {
+          case 'incomingNotification':
+          newMessages = [...messages, incomingData];
+            // console.log(newMessages);
+          break;
+          case 'incomingMessage':
+            newMessages = [...messages, incomingData];
+            // console.log(newMessages); 
+          break;
+          default:
+            throw new Error(`Unknown event type: ${ incomingData.type }`);
+      }
       this.setState({
         messages: newMessages
       });
