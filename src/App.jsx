@@ -49,7 +49,7 @@ class App extends Component {
     }  
     this.socket.onmessage = (event) => {
       let incomingData = JSON.parse(event.data).message;
-      console.log(incomingData);
+      //console.log(incomingData);
       const messages = this.state.messages;
       const newMessages = [...messages, incomingData];
       console.log(newMessages);
