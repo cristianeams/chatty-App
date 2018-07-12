@@ -2,20 +2,22 @@ import React, {Component} from 'react';
 import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
 import NavBar from './NavBar.jsx';
-import { generateID } from './main.js';
-
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state =  {
-      currentUser: {name: 'Bob'}, // optional. if currentUser is not defined, it means the user is Anonymous
+      currentUser: {
+        name: 'Anonymous'
+      }, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: [] // messages coming from the server will be stored here as they arrive
     }
     this.componentDidMount = this.componentDidMount.bind(this);
     this.sendToServer = this.sendToServer.bind(this);
-    this.socket = new WebSocket("ws://localhost:3001");
+    const myUrl = window.location.hostname;
+    this.socket = new WebSocket(`ws://${myUrl}:3001`);
     this.onPost = this.onPost.bind(this);
+    this.onUser = this.onUser.bind(this);
   }
 
   sendToServer = message => {
@@ -23,12 +25,21 @@ class App extends Component {
     console.log("Message sent to server");
   }
 
+  onUser = username => {
+    const myUser = {name: username}
+    this.setState({
+      currentUser : myUser
+    });
+  }
+
   onPost = message => {
     const newMessage = {
-      username: message.username,
-      content: message.content
+      username: this.state.currentUser.name,
+      content: message
     }
-    this.sendToServer({message: newMessage});
+    this.sendToServer({
+      message: newMessage
+    });
   }
   
   componentDidMount() {
@@ -45,7 +56,6 @@ class App extends Component {
       this.setState({
         messages: newMessages
       });
-     
     }
   }
 
@@ -53,8 +63,8 @@ class App extends Component {
     return (
       <div>
         <NavBar />
-        <MessageList messages={this.state.messages} />
-        <ChatBar currentUser={ this.state.currentUser.name } onPost={ this.onPost } />
+        <MessageList messages={ this.state.messages } />
+        <ChatBar currentUser={ this.state.currentUser.name } onPost={ this.onPost } onUser={ this.onUser } />
       </div>  
     );
   }
