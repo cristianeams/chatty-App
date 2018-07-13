@@ -28,5 +28,5 @@ Chatty is a real-time web app that  allows users to communicate with each other 
 
 ## Final Product
 
-!["Screenshot of Chatty"]()
-!["Users chatting"]()
+!["Screenshot of Chatty"](https://github.com/cristianeams/chatty-App/blob/master/docs/Screen%20Shot%202018-07-13%20at%202.29.44%20PM.png?raw=true)
+!["Users chatting"](https://github.com/cristianeams/chatty-App/blob/master/docs/Screen%20Shot%202018-07-13%20at%202.30.50%20PM.png?raw=true)
