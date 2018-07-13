@@ -28,33 +28,38 @@ broadcast = message => {
   });
 };
 
-
 wss.on('connection', (ws) => {
-  console.log('Client connected');
+  let onlineUsers = {};
+  onlineUsers['counter'] = wss.clients.size;
+  onlineUsers['type'] = 'numberOfUsers';
+  onlineUsers = JSON.stringify(onlineUsers);
+  ws.send(onlineUsers);
+  console.log(`Client connected`);
 
+  
   ws.on('message', (message) => {
     // Broadcast to everyone
     const parsedMessage = JSON.parse(message);
-    switch(parsedMessage.message.type) {
+    switch(parsedMessage.type) {
       case 'postNotification':
-        parsedMessage.message.type = 'incomingNotification';
-        parsedMessage.message['id'] = uuidv4();
+        parsedMessage.type = 'incomingNotification';
+        parsedMessage['id'] = uuidv4();
         broadcast(parsedMessage);
       break;
 
       case 'postMessage':
-        parsedMessage.message.type = 'incomingMessage';
-        parsedMessage.message['id'] = uuidv4();
+        parsedMessage.type = 'incomingMessage';
+        parsedMessage['id'] = uuidv4();
         broadcast(parsedMessage);
       break;
       // show an error in the console if the message type is unknown
       default:
-        throw new Error(`Unknown event type: ${ parsedMessage.message.type }`);
+        throw new Error(`Unknown event type: ${ parsedMessage.type }`);
     }
   });
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   ws.on('close', () => {
-    console.log('Client disconnected')
+    console.log(`Client disconnected`)
   });
 });

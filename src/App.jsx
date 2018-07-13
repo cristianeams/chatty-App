@@ -10,7 +10,8 @@ class App extends Component {
       currentUser: {
         name: 'Anonymous'
       }, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: [] // messages coming from the server will be stored here as they arrive
+      messages: [], // messages coming from the server will be stored here as they arrive
+      count: 0 
     }
     this.componentDidMount = this.componentDidMount.bind(this);
     this.sendToServer = this.sendToServer.bind(this);
@@ -21,13 +22,12 @@ class App extends Component {
   }
 
   sendToServer = message => {
-    // console.log(message)
     this.socket.send(JSON.stringify(message));
-    console.log("Message sent to server");
+    console.log(`Message sent to server`);
   }
 
   onUser = username => {
-    // console.log(username);
+    // Sends notification to server
     const myUser = { name: username }
     this.setState({
       currentUser : myUser
@@ -38,25 +38,19 @@ class App extends Component {
         type: 'postNotification',
         content: `${ this.state.currentUser.name } has changed their name to ${ username }`
       }
-      this.sendToServer({
-        message: newNotification
-      });
-  }
+    this.sendToServer(newNotification);
+    } 
 }
 
   onPost = message => {
-    // Sends notification to server
-    console.log(message )
-      // Sends message to server
-      const newMessage = {
-        type: 'postMessage',
-        username: message.username,
-        content: message
-      }
-      this.sendToServer({
-        message: newMessage
-      });
-    }  
+  // Sends message to server
+    const newMessage = {
+      type: 'postMessage',
+      username: message.username,
+      content: message
+    }
+    this.sendToServer(newMessage);
+  }  
   
   componentDidMount() {
     console.log('componentDidMount <App />');
@@ -64,33 +58,33 @@ class App extends Component {
       console.log('Connected to server');
     }  
     this.socket.onmessage = (event) => {
-      let incomingData = JSON.parse(event.data).message;
-      //console.log(incomingData);
+      let incomingData = JSON.parse(event.data);
       const messages = this.state.messages;
       let newMessages;
-      console.log(incomingData);
-      switch(incomingData.type) {
+      if (incomingData.type === 'numberOfUsers') {
+        this.setState({ counter: incomingData.counter})
+      } else {
+        switch(incomingData.type) {
           case 'incomingNotification':
-          newMessages = [...messages, incomingData];
-            // console.log(newMessages);
+            newMessages = [...messages, incomingData];
           break;
           case 'incomingMessage':
             newMessages = [...messages, incomingData];
-            // console.log(newMessages); 
           break;
           default:
             throw new Error(`Unknown event type: ${ incomingData.type }`);
+        }
+        this.setState({
+          messages: newMessages 
+        });  
       }
-      this.setState({
-        messages: newMessages
-      });
     }
   }
 
   render() {
     return (
       <div>
-        <NavBar />
+        <NavBar counter={ this.state.counter } />
         <MessageList messages={ this.state.messages } />
         <ChatBar currentUser={ this.state.currentUser.name } onPost={ this.onPost } onUser={ this.onUser } />
       </div>  
