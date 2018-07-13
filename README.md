@@ -1,45 +1,32 @@
-React Boilerplate
+Chatty
 =====================
+Chatty is a real-time web app that  allows users to communicate with each other without having to register accounts.
 
-A minimal and light dev environment for ReactJS.
+## Getting Started
 
-### Usage
+1. Fork this repository, then clone your fork of this repository.
+2. Install dependencies using the `npm install` command.
+3. Go to the chatty_server directory and start the web server using the `npm start` command. The app will be served at <http://localhost:3001/>.
+4. Open a new terminal window.
+5. Go to the main directory and run `npm start`.
+6. Have both terminal windows open and go to  <http://localhost:3000/> in your browser.
+7. Send your Ip address to friends, so they can connect and chat using Chatty  🤗
 
-Clone the boilerplate and create your own git repo.
+## Dependencies
 
-```
-git clone git@github.com:lighthouse-labs/react-simple-boilerplate.git
-cd react-simple-boilerplate
-git remote rm origin
-git remote add origin [YOUR NEW REPOSITORY]
-# Manually update your package.json file
-```
+- React
+- UUID
+- Express
+- Ws
+- Babel-core
+- Babel-loader
+- Babel-preset-react
+- Webpack
+- Node Sass
+- Sockjs client
+- Style loader
 
-Install the dependencies and start the server.
+## Final Product
 
-```
-npm install
-npm start
-open http://localhost:3000
-```
-
-### Static Files
-
-You can store static files like images, fonts, etc in the `build` folder.
-
-For example, if you copy a file called my_image.png into the build folder you can access it using `http://localhost:3000/build/my_image.png`.
-
-### Linting
-
-This boilerplate project includes React ESLint configuration.
-
-```
-npm run lint
-```
-
-### Dependencies
-
-* React
-* Webpack
-* [babel-loader](https://github.com/babel/babel-loader)
-* [webpack-dev-server](https://github.com/webpack/webpack-dev-server)
+!["Screenshot of Chatty"]()
+!["Users chatting"]()
