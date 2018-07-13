@@ -9,9 +9,9 @@ class MessageList extends Component {
   render() {
     // Checks if incoming data is a notification or a message
     return (
-      <main className="messages">
+      <main className='messages'>
         { this.props.messages.map(message => {
-            if (message.type === "incomingNotification") {
+            if (message.type === 'incomingNotification') {
               return <Notification  
                 key={ message.id }
                 content={ message.content }
@@ -19,6 +19,7 @@ class MessageList extends Component {
             } else {
               return <Message
                 key={ message.id }
+                color = { message.color }
                 username={ message.username }
                 content={ message.content }
               />
