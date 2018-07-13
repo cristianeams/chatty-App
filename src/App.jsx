@@ -3,14 +3,24 @@ import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
 import NavBar from './NavBar.jsx';
 
+const getRandomColor = () => { 
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state =  {
       currentUser: {
-        name: 'Anonymous'
-      }, // optional. if currentUser is not defined, it means the user is Anonymous
-      messages: [], // messages coming from the server will be stored here as they arrive
+        name: 'Anonymous', // optional. if currentUser is not defined, it means the user is Anonymous
+        color: '#fff'
+      }, 
+      messages: [], // messages coming from the server are stored here as they arrive
       count: 0 
     }
     this.componentDidMount = this.componentDidMount.bind(this);
@@ -22,18 +32,19 @@ class App extends Component {
   }
 
   sendToServer = message => {
+    // Sends either notification or message to server
     this.socket.send(JSON.stringify(message));
     console.log(`Message sent to server`);
   }
 
   onUser = username => {
-    // Sends notification to server
+    // Updates username on name change
     const myUser = { name: username }
     this.setState({
       currentUser : myUser
     });
-
-    if(this.state.currentUser.name != username) {
+    // Send a postNotification to server is user changes name
+    if(this.state.currentUser.name != username) { 
       const newNotification = {
         type: 'postNotification',
         content: `${ this.state.currentUser.name } has changed their name to ${ username }`
@@ -43,25 +54,32 @@ class App extends Component {
 }
 
   onPost = message => {
-  // Sends message to server
+  // Creates a new message
     const newMessage = {
       type: 'postMessage',
       username: message.username,
-      content: message
+      content: message,
+      color: this.state.color
     }
     this.sendToServer(newMessage);
   }  
   
   componentDidMount() {
     console.log('componentDidMount <App />');
+    // Sets a random color for each user
+    this.setState({
+      color: getRandomColor()
+    });
+
     this.socket.onopen = (event) => {
       console.log('Connected to server');
     }  
+
     this.socket.onmessage = (event) => {
       let incomingData = JSON.parse(event.data);
       const messages = this.state.messages;
       let newMessages;
-      console.log(incomingData)
+      // Gets number of online users from server
       if (incomingData.type === 'numberOfUsers') {
         this.setState({ counter: incomingData.counter})
       } else {
