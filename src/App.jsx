@@ -61,6 +61,7 @@ class App extends Component {
       let incomingData = JSON.parse(event.data);
       const messages = this.state.messages;
       let newMessages;
+      console.log(incomingData)
       if (incomingData.type === 'numberOfUsers') {
         this.setState({ counter: incomingData.counter})
       } else {

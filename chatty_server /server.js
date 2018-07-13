@@ -24,6 +24,7 @@ broadcast = message => {
   wss.clients.forEach (client => {
     if(client.readyState === SocketServer.OPEN) {
       client.send(JSON.stringify(message));
+      console.log(message)
     }
   });
 };
@@ -33,7 +34,10 @@ wss.on('connection', (ws) => {
   onlineUsers['counter'] = wss.clients.size;
   onlineUsers['type'] = 'numberOfUsers';
   onlineUsers = JSON.stringify(onlineUsers);
-  ws.send(onlineUsers);
+  wss.clients.forEach (client => {
+    client.send(onlineUsers);
+  })
+  // ws.send(onlineUsers);
   console.log(`Client connected`);
 
   
